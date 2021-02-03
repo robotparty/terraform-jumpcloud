@@ -32,26 +32,34 @@ func New(version string) func() *schema.Provider {
 			ResourcesMap: map[string]*schema.Resource{
 				"scaffolding_resource": resourceScaffolding(),
 			},
+			Schema: map[string]*schema.Schema{
+				"api_key": {
+					Type:        schema.TypeString,
+					Required:    true,
+					DefaultFunc: schema.EnvDefaultFunc("JUMPCLOUD_API_KEY", nil),
+					Description: "The admin API key to access JumpCloud resources",
+				},
+				"org_id": {
+					Type:        schema.TypeString,
+					Required:    true,
+					DefaultFunc: schema.EnvDefaultFunc("JUMPCLOUD_ORG_ID", nil),
+					Description: "The JumpCloud organization ID",
+				},
+			},
 		}
 
-		p.ConfigureContextFunc = configure(version, p)
+		p.UserAgent("terraform-provider-jumpcloud", version)
+		p.ConfigureContextFunc = configure
 
 		return p
 	}
 }
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
-
-func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
-		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
-		// TODO: myClient.UserAgent = userAgent
-
-		return &apiClient{}, nil
+func configure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	config := Config{
+		APIKey: d.Get("api_key").(string),
+		OrgId:  d.Get("org_id").(string),
 	}
+
+	return config.Client(), nil
 }
