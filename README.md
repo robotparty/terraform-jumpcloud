@@ -27,7 +27,7 @@ Once you've written your provider, you'll want to [publish it on the Terraform R
 $ go install
 ```
 
-## Adding Dependencies
+## Adding Dependencies   
 
 This provider uses [Go modules](https://github.com/golang/go/wiki/Modules).
 Please see the Go documentation for the most up to date information about using Go modules.
