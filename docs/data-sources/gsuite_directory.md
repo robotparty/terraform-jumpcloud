@@ -9,7 +9,11 @@ description: |-
 
 Use this data source to get information about a JumpCloud G Suite directory.
 
+## Example Usage
 
+```terraform
+data "jumpcloud_gsuite_directory" "example" {}
+```
 
 ## Schema
 

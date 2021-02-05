@@ -9,7 +9,11 @@ description: |-
 
 Use this data source to get information about the JumpCloud LDAP directory.
 
+## Example Usage
 
+```terraform
+data "jumpcloud_ldap_directory" "example" {}
+```
 
 ## Schema
 

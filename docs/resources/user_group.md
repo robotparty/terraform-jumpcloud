@@ -9,7 +9,13 @@ description: |-
 
 Provides a JumpCloud user group resource. Refer to the [JumpCloud API model](https://docs.jumpcloud.com/2.0/models/usergroup) for further details.
 
+## Example Usage
 
+```terraform
+resource "jumpcloud_user_group" "example" {
+  name = "My User Group"
+}
+```
 
 ## Schema
 

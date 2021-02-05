@@ -9,7 +9,17 @@ description: |-
 
 Provides a JumpCloud system user resource. For additional information refer also to the [JumpCloud API user model](https://docs.jumpcloud.com/1.0/models/systemuserpost).
 
+## Example Usage
 
+```terraform
+resource "jumpcloud_user" "john_doe" {
+  username   = "john.doe"
+  email      = "john.doe@acme.org"
+  firstname  = "John Smith"
+  lastname   = "Doe"
+  enable_mfa = true
+}
+```
 
 ## Schema
 

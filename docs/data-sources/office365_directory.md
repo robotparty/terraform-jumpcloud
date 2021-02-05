@@ -9,7 +9,11 @@ description: |-
 
 Use this data source to get information about a JumpCloud Office 365 directory.
 
+## Example Usage
 
+```terraform
+data "jumpcloud_office365_directory" "example" {}
+```
 
 ## Schema
 
