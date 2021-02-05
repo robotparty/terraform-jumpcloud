@@ -3,8 +3,7 @@ package provider
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"net/http"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
@@ -13,11 +12,11 @@ import (
 
 func resourceUserGroup() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides a JumpCloud user group resource. Refer to the [JumpCloud API model](https://docs.jumpcloud.com/2.0/models/usergroup) for further details.",
-		Create:      resourceUserGroupCreate,
-		Read:        resourceUserGroupRead,
-		Update:      resourceUserGroupUpdate,
-		Delete:      resourceUserGroupDelete,
+		Description:   "Provides a JumpCloud user group resource. Refer to the [JumpCloud API model](https://docs.jumpcloud.com/2.0/models/usergroup) for further details.",
+		CreateContext: resourceUserGroupCreate,
+		ReadContext:   resourceUserGroupRead,
+		UpdateContext: resourceUserGroupUpdate,
+		DeleteContext: resourceUserGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "The name of the group. Example: `My Group`.",
@@ -59,8 +58,8 @@ func resourceUserGroup() *schema.Resource {
 	}
 }
 
-func resourceUserGroupCreate(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	body := jcapiv2.UserGroupPost{Name: d.Get("name").(string)}
@@ -78,24 +77,24 @@ func resourceUserGroupCreate(d *schema.ResourceData, m interface{}) error {
 		"", headerAccept, req)
 	if err != nil {
 		// TODO: sort out error essentials
-		return fmt.Errorf("error creating user group %s: %s - response = %+v",
+		return diag.Errorf("error creating user group %s: %s - response = %+v",
 			(req["body"].(jcapiv2.UserGroupPost)).Name, err, res)
 	}
 
 	d.SetId(group.Id)
-	return resourceUserGroupRead(d, m)
+	return resourceUserGroupRead(ctx, d, meta)
 }
 
 // resourceUserGroupRead uses a helper function that consumes the
 // JC's HTTP API directly; the groups' attributes need to be kept in state
 // as they are required for resourceUserGroupUpdate and the current
 // implementation of the JC SDK doesn't support their retrieval
-func resourceUserGroupRead(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 
 	group, ok, err := userGroupReadHelper(config, d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	if !ok {
@@ -106,10 +105,10 @@ func resourceUserGroupRead(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(group.ID)
 	if err := d.Set("name", group.Name); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	if err := d.Set("attributes", flattenAttributes(&group.Attributes)); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	return nil
@@ -146,15 +145,15 @@ func userGroupReadHelper(config *jcapiv2.Configuration, id string) (ug *UserGrou
 	return
 }
 
-func resourceUserGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	body := jcapiv2.UserGroupPost{Name: d.Get("name").(string)}
 	if attr, ok := expandAttributes(d.Get("attributes")); ok {
 		body.Attributes = attr
 	} else {
-		return errors.New("unable to update, attributes not expandable")
+		return diag.Errorf("Unable to update, attributes not expandable")
 	}
 
 	req := map[string]interface{}{
@@ -166,22 +165,23 @@ func resourceUserGroupUpdate(d *schema.ResourceData, m interface{}) error {
 		d.Id(), "", headerAccept, req)
 	if err != nil {
 		// TODO: sort out error essentials
-		return fmt.Errorf("error deleting user group:%s; response = %+v", err, res)
+		return diag.Errorf("error deleting user group:%s; response = %+v", err, res)
 	}
 
-	return resourceUserGroupRead(d, m)
+	return resourceUserGroupRead(ctx, d, meta)
 }
 
-func resourceUserGroupDelete(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	res, err := client.UserGroupsApi.GroupsUserDelete(context.TODO(),
 		d.Id(), "", headerAccept, nil)
 	if err != nil {
 		// TODO: sort out error essentials
-		return fmt.Errorf("error deleting user group:%s; response = %+v", err, res)
+		return diag.Errorf("error deleting user group:%s; response = %+v", err, res)
 	}
+
 	d.SetId("")
 	return nil
 }

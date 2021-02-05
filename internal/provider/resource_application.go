@@ -3,6 +3,7 @@ package provider
 import (
 	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/net/context"
 	"log"
@@ -10,11 +11,11 @@ import (
 
 func resourceApplication() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides a resource for adding an Amazon Web Services (AWS) account application. **Note:** This resource is due to change in future versions to be more generic and allow for adding various applications supported by JumpCloud.",
-		Create:      resourceApplicationCreate,
-		Read:        resourceApplicationRead,
-		Update:      resourceApplicationUpdate,
-		Delete:      resourceApplicationDelete,
+		Description:   "Provides a resource for adding an Amazon Web Services (AWS) account application. **Note:** This resource is due to change in future versions to be more generic and allow for adding various applications supported by JumpCloud.",
+		CreateContext: resourceApplicationCreate,
+		ReadContext:   resourceApplicationRead,
+		UpdateContext: resourceApplicationUpdate,
+		DeleteContext: resourceApplicationDelete,
 
 		Schema: map[string]*schema.Schema{
 			"display_label": {
@@ -55,8 +56,8 @@ func resourceApplication() *schema.Resource {
 //	return configv1
 //}
 
-func resourceApplicationCreate(d *schema.ResourceData, m interface{}) error {
-	configv1 := convertV2toV1Config(m.(*jcapiv2.Configuration))
+func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
 	payload := jcapiv1.Application{
@@ -85,17 +86,17 @@ func resourceApplicationCreate(d *schema.ResourceData, m interface{}) error {
 		"body": payload,
 	}
 
-	returnstruc, _, err := client.ApplicationsApi.ApplicationsPost(context.TODO(), request)
+	returnStruct, _, err := client.ApplicationsApi.ApplicationsPost(context.TODO(), request)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	d.SetId(returnstruc.Id)
-	return resourceApplicationRead(d, m)
+	d.SetId(returnStruct.Id)
+	return resourceApplicationRead(ctx, d, meta)
 }
 
-func resourceApplicationRead(d *schema.ResourceData, m interface{}) error {
-	configv1 := convertV2toV1Config(m.(*jcapiv2.Configuration))
+func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
 	response, _, err := client.ApplicationsApi.ApplicationsGet(context.TODO(), d.Id(), nil)
@@ -106,29 +107,29 @@ func resourceApplicationRead(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(response.Id)
 
 	if err := d.Set("display_label", response.DisplayLabel); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	if err := d.Set("sso_url", response.SsoUrl); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	constantAttributeValues := response.Config.ConstantAttributes.Value
 	for _, el := range constantAttributeValues {
 		if el.Name == "https://aws.amazon.com/SAML/Attributes/SessionDuration" {
 			if err := d.Set("aws_session_duration", el.Value); err != nil {
-				return err
+				return diag.FromErr(err)
 			}
 		}
 
 		if el.Name == "https://aws.amazon.com/SAML/Attributes/Role" {
 			if err := d.Set("saml_role_attribute", el.Value); err != nil {
-				return err
+				return diag.FromErr(err)
 			}
 		}
 	}
@@ -140,11 +141,11 @@ func resourceApplicationRead(d *schema.ResourceData, m interface{}) error {
 
 		metadataXml, err := GetApplicationMetadataXml(orgId, response.Id, apiKey)
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 
 		if err := d.Set("metadata_xml", metadataXml); err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 	} else {
 		log.Println("[INFO] no ID in response, skipping metadata XML retrieval")
@@ -153,8 +154,8 @@ func resourceApplicationRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceApplicationUpdate(d *schema.ResourceData, m interface{}) error {
-	configv1 := convertV2toV1Config(m.(*jcapiv2.Configuration))
+func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
 	payload := jcapiv1.Application{
@@ -185,18 +186,18 @@ func resourceApplicationUpdate(d *schema.ResourceData, m interface{}) error {
 
 	_, _, err := client.ApplicationsApi.ApplicationsPut(context.TODO(), d.Id(), request)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
-	return resourceApplicationRead(d, m)
+	return resourceApplicationRead(ctx, d, meta)
 }
 
-func resourceApplicationDelete(d *schema.ResourceData, m interface{}) error {
-	configv1 := convertV2toV1Config(m.(*jcapiv2.Configuration))
+func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
 	_, _, err := client.ApplicationsApi.ApplicationsDelete(context.TODO(), d.Id(), nil)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId("")

@@ -2,15 +2,15 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to get information about a JumpCloud G Suite directory.",
-		Read:        dataSourceJumpCloudGSuiteDirectoryRead,
+		ReadContext: dataSourceJumpCloudGSuiteDirectoryRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Description: "The user defined name, e.g. `My G Suite directory`.",
@@ -26,14 +26,14 @@ func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 	}
 }
 
-func dataSourceJumpCloudGSuiteDirectoryRead(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func dataSourceJumpCloudGSuiteDirectoryRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	directories, _, err := client.DirectoriesApi.DirectoriesList(
 		context.TODO(), "", "", nil)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	// there can only be a single GSuite directory per JumpCloud account
@@ -47,5 +47,5 @@ func dataSourceJumpCloudGSuiteDirectoryRead(d *schema.ResourceData, m interface{
 		return nil
 	}
 
-	return fmt.Errorf("couldn't find a directory with type 'g_suite'")
+	return diag.Errorf("couldn't find a directory with type 'g_suite'")
 }

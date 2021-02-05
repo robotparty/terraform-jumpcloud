@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"strings"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
@@ -10,13 +11,13 @@ import (
 
 func resourceUserGroupMembership() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides a resource for managing user group memberships.",
-		Create:      resourceUserGroupMembershipCreate,
-		Read:        resourceUserGroupMembershipRead,
+		Description:   "Provides a resource for managing user group memberships.",
+		CreateContext: resourceUserGroupMembershipCreate,
+		ReadContext:   resourceUserGroupMembershipRead,
 		// We must not have an update routine as the association cannot be updated.
 		// Any change in one of the elements forces a recreation of the resource
-		Update: nil,
-		Delete: resourceUserGroupMembershipDelete,
+		Update:        nil,
+		DeleteContext: resourceUserGroupMembershipDelete,
 		Schema: map[string]*schema.Schema{
 			"user_id": {
 				Description: "The ID of the `resource_user` object.",
@@ -41,7 +42,7 @@ func resourceUserGroupMembership() *schema.Resource {
 // populated.- In our case, we need the group ID and user ID to do the read - But since our
 // artificial resource ID is simply the concatenation of user ID group ID seperated by  a '/',
 // we can derive both values during our import process
-func userGroupMembershipImporter(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+func userGroupMembershipImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	s := strings.Split(d.Id(), "/")
 	d.Set("group_id", s[0])
 	d.Set("user_id", s[1])
@@ -49,7 +50,7 @@ func userGroupMembershipImporter(d *schema.ResourceData, m interface{}) ([]*sche
 }
 
 func modifyUserGroupMembership(client *jcapiv2.APIClient,
-	d *schema.ResourceData, action string) error {
+	d *schema.ResourceData, action string) diag.Diagnostics {
 
 	payload := jcapiv2.UserGroupMembersReq{
 		Op:    action,
@@ -64,22 +65,22 @@ func modifyUserGroupMembership(client *jcapiv2.APIClient,
 	_, err := client.UserGroupMembersMembershipApi.GraphUserGroupMembersPost(
 		context.TODO(), d.Get("group_id").(string), "", "", req)
 
-	return err
+	return diag.FromErr(err)
 }
 
-func resourceUserGroupMembershipCreate(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupMembershipCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	err := modifyUserGroupMembership(client, d, "add")
 	if err != nil {
 		return err
 	}
-	return resourceUserGroupMembershipRead(d, m)
+	return resourceUserGroupMembershipRead(ctx, d, meta)
 }
 
-func resourceUserGroupMembershipRead(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupMembershipRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
 	optionals := map[string]interface{}{
@@ -90,7 +91,7 @@ func resourceUserGroupMembershipRead(d *schema.ResourceData, m interface{}) erro
 	graphconnect, _, err := client.UserGroupMembersMembershipApi.GraphUserGroupMembersList(
 		context.TODO(), d.Get("group_id").(string), "", "", optionals)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	// The user_ids are hidden in a super-complex construct, see
@@ -108,8 +109,8 @@ func resourceUserGroupMembershipRead(d *schema.ResourceData, m interface{}) erro
 	return nil
 }
 
-func resourceUserGroupMembershipDelete(d *schema.ResourceData, m interface{}) error {
-	config := m.(*jcapiv2.Configuration)
+func resourceUserGroupMembershipDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 	return modifyUserGroupMembership(client, d, "remove")
 }
