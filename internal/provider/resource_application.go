@@ -10,31 +10,37 @@ import (
 
 func resourceApplication() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceApplicationCreate,
-		Read:   resourceApplicationRead,
-		Update: resourceApplicationUpdate,
-		Delete: resourceApplicationDelete,
+		Description: "Provides a resource for adding an Amazon Web Services (AWS) account application. **Note:** This resource is due to change in future versions to be more generic and allow for adding various applications supported by JumpCloud.",
+		Create:      resourceApplicationCreate,
+		Read:        resourceApplicationRead,
+		Update:      resourceApplicationUpdate,
+		Delete:      resourceApplicationDelete,
 
 		Schema: map[string]*schema.Schema{
 			"display_label": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Name of the application to display",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"sso_url": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The SSO URL suffix to use",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"saml_role_attribute": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Value of the `https://aws.amazon.com/SAML/Attributes/Role` attribute.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"aws_session_duration": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Value of the `https://aws.amazon.com/SAML/Attributes/SessionDuration` attribute.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"metadata_xml": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The JumpCloud metadata XML file.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

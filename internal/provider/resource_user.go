@@ -11,30 +11,36 @@ import (
 
 func resourceUser() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUserCreate,
-		Read:   resourceUserRead,
-		Update: resourceUserUpdate,
-		Delete: resourceUserDelete,
+		Description: "Provides a JumpCloud system user resource. For additional information refer also to the [JumpCloud API user model](https://docs.jumpcloud.com/1.0/models/systemuserpost).",
+		Create:      resourceUserCreate,
+		Read:        resourceUserRead,
+		Update:      resourceUserUpdate,
+		Delete:      resourceUserDelete,
 		Schema: map[string]*schema.Schema{
 			"username": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The technical user name. See JumpCloud's [user naming conventions](https://support.jumpcloud.com/support/s/article/naming-convention-for-users1) for naming restrictions. Example: `john.doe`.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"email": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The users e-mail address, which is also used for log ins. E-mail addresses have to be unique across all JumpCloud accounts, there cannot be two users with the same e-mail address. Example: `john.doe@acme.org`.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"firstname": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "The user's first name. Example: `john`.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"lastname": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "The user's last name. Example: `doe`.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"enable_mfa": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Description: "Require Multi-factor Authentication on the User Portal.",
+				Type:        schema.TypeBool,
+				Optional:    true,
 			},
 			// Currently, only the options necessary for our use case are implemented
 			// JumpCloud offers a lot more

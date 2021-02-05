@@ -15,24 +15,6 @@ This provider is still under development. Feel free to open an issue or contribu
 
 ## Example Usage
 
-```terraform
-terraform {
-  required_providers {
-    jumpcloud = {
-      source = "sagewave/jumpcloud"
-    }
-  }
-}
+{{tffile "examples/provider/provider.tf"}}
 
-provider "jumpcloud" {
-  api_key = "test"
-  org_id  = "test"
-}
-```
-
-## Schema
-
-### Required
-
-- **api_key** (String) The admin API key to access JumpCloud resources. Can be passed via `JUMPCLOUD_API_KEY` environment variable.
-- **org_id** (String) The JumpCloud organization ID. Can be passed via `JUMPCLOUD_ORG_ID` environment variable.
+{{ .SchemaMarkdown | trimspace }}

@@ -9,15 +9,18 @@ import (
 
 func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceJumpCloudGSuiteDirectoryRead,
+		Description: "Use this data source to get information about a JumpCloud G Suite directory.",
+		Read:        dataSourceJumpCloudGSuiteDirectoryRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The user defined name, e.g. `My G Suite directory`.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The directory type. This will always be `g_suite`.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
@@ -34,6 +37,7 @@ func dataSourceJumpCloudGSuiteDirectoryRead(d *schema.ResourceData, m interface{
 	}
 
 	// there can only be a single GSuite directory per JumpCloud account
+	// TODO this is no longer true, there can be multiple G Suite directories per account!
 	for _, dir := range directories {
 		if dir.Type_ == "g_suite" {
 			d.SetId(dir.Id)

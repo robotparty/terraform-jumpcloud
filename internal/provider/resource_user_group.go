@@ -13,20 +13,24 @@ import (
 
 func resourceUserGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUserGroupCreate,
-		Read:   resourceUserGroupRead,
-		Update: resourceUserGroupUpdate,
-		Delete: resourceUserGroupDelete,
+		Description: "Provides a JumpCloud user group resource. Refer to the [JumpCloud API model](https://docs.jumpcloud.com/2.0/models/usergroup) for further details.",
+		Create:      resourceUserGroupCreate,
+		Read:        resourceUserGroupRead,
+		Update:      resourceUserGroupUpdate,
+		Delete:      resourceUserGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The name of the group. Example: `My Group`.",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"attributes": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				// TODO add description
+				Description: "TODO",
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"posix_groups": {

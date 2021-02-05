@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -12,15 +14,13 @@ func init() {
 	// and the language server.
 	schema.DescriptionKind = schema.StringMarkdown
 
-	// Customize the content of descriptions when output. For example you can add defaults on
-	// to the exported descriptions if present.
-	// schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
-	// 	desc := s.Description
-	// 	if s.Default != nil {
-	// 		desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
-	// 	}
-	// 	return strings.TrimSpace(desc)
-	// }
+	schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
+		desc := s.Description
+		if s.Default != nil {
+			desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
+		}
+		return strings.TrimSpace(desc)
+	}
 }
 
 func New(version string) func() *schema.Provider {
@@ -43,13 +43,13 @@ func New(version string) func() *schema.Provider {
 					Type:        schema.TypeString,
 					Required:    true,
 					DefaultFunc: schema.EnvDefaultFunc("JUMPCLOUD_API_KEY", nil),
-					Description: "The admin API key to access JumpCloud resources",
+					Description: "The admin API key to access JumpCloud resources. Can be passed via `JUMPCLOUD_API_KEY` environment variable.",
 				},
 				"org_id": {
 					Type:        schema.TypeString,
 					Required:    true,
 					DefaultFunc: schema.EnvDefaultFunc("JUMPCLOUD_ORG_ID", nil),
-					Description: "The JumpCloud organization ID",
+					Description: "The JumpCloud organization ID. Can be passed via `JUMPCLOUD_ORG_ID` environment variable.",
 				},
 			},
 		}

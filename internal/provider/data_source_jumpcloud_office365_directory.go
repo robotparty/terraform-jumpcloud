@@ -9,15 +9,18 @@ import (
 
 func dataSourceJumpCloudOffice365Directory() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceJumpCloudOffice365DirectoryRead,
+		Description: "Use this data source to get information about a JumpCloud Office 365 directory.",
+		Read:        dataSourceJumpCloudOffice365DirectoryRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The user defined name, e.g. `My G Suite directory`.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The directory type. This will always be `office_365`.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

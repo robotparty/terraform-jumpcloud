@@ -9,25 +9,29 @@ import (
 
 func resourceUserGroupAssociation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUserGroupAssociationCreate,
-		Read:   resourceUserGroupAssociationRead,
-		Update: nil,
-		Delete: resourceUserGroupAssociationDelete,
+		Description: "Provides a resource for associating a JumpCloud user group to objects like SSO applications, G Suite, Office 365, LDAP and more.",
+		Create:      resourceUserGroupAssociationCreate,
+		Read:        resourceUserGroupAssociationRead,
+		Update:      nil,
+		Delete:      resourceUserGroupAssociationDelete,
 		Schema: map[string]*schema.Schema{
 			"group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The ID of the `resource_user_group` resource.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"object_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The ID of the object to associate to the group.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The type of the object to associate to the given group. Possible values: `active_directory`, `application`, `command`, `g_suite`, `ldap_server`, `office_365`, `policy`, `radius_server`, `system`, `system_group`.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errors []error) {
 					allowedValues := []string{
 						"active_directory",
