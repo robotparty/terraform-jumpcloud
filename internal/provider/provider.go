@@ -27,10 +27,16 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			DataSourcesMap: map[string]*schema.Resource{
-				"scaffolding_data_source": dataSourceScaffolding(),
+				"jumpcloud_gsuite_directory":    dataSourceJumpCloudGSuiteDirectory(),
+				"jumpcloud_ldap_directory":      dataSourceJumpCloudLDAPDirectory(),
+				"jumpcloud_office365_directory": dataSourceJumpCloudOffice365Directory(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
+				"jumpcloud_application":            resourceApplication(),
+				"jumpcloud_user":                   resourceUser(),
+				"jumpcloud_user_group":             resourceUserGroup(),
+				"jumpcloud_user_group_membership":  resourceUserGroupMembership(),
+				"jumpcloud_user_group_association": resourceUserGroupAssociation(),
 			},
 			Schema: map[string]*schema.Schema{
 				"api_key": {
