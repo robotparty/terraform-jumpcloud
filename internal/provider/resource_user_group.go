@@ -26,7 +26,7 @@ func resourceUserGroup() *schema.Resource {
 			"attributes": {
 				// TODO add description
 				Description: "TODO",
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
@@ -38,17 +38,17 @@ func resourceUserGroup() *schema.Resource {
 							ForceNew: true,
 							Optional: true,
 						},
-						// enable_samba has a more complicated lifecycle,
-						// Commenting out for now as it is ignored in CRU by the JCAPI
-						// From Jumpcloud UI:
-						// Samba Authentication must be configured in the
-						// JumpCloud LDAP Directory and LDAP sync must be enabled
-						// on this group before Samba Authentication can be enabled.
-						// "enable_samba": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
 					},
+					// enable_samba has a more complicated lifecycle,
+					// Commenting out for now as it is ignored in CRU by the JCAPI
+					// From Jumpcloud UI:
+					// Samba Authentication must be configured in the
+					// JumpCloud LDAP Directory and LDAP sync must be enabled
+					// on this group before Samba Authentication can be enabled.
+					// "enable_samba": {
+					// 	Type:     schema.TypeBool,
+					// 	Optional: true,
+					// },
 				},
 			},
 		},

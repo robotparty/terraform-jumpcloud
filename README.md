@@ -50,3 +50,9 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 ```sh
 $ make testacc
 ```
+
+## Testing
+Required env variables:
+- JUMPCLOUD_ORG_ID
+- JUMPCLOUD_API_KEY
+- TF_ACC=1
