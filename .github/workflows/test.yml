@@ -74,6 +74,8 @@ jobs:
       env:
         TF_ACC: "1"
         TF_ACC_TERRAFORM_VERSION: ${{ matrix.terraform }}
+        JUMPCLOUD_API_KEY: ${{ secrets.JUMPCLOUD_API_KEY }}
+        JUMPCLOUD_ORG_ID: ${{ secrets.JUMPCLOUD_ORG_ID }}
 
         # Set whatever additional acceptance test env vars here. You can
         # optionally use data from your repository secrets using the
