@@ -19,10 +19,10 @@ func Test_resourceApplication(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`resource "jumpcloud_application" "test_application_%s" {
 						display_label = "test_aws_account"
-						sso_url = "https://sso.jumpcloud.com/saml2/example-application"
+						sso_url = "https://sso.jumpcloud.com/saml2/example-application_%s"
 						saml_role_attribute = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
 						aws_session_duration = 432000
-					}`, rName),
+					}`, rName, rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(fmt.Sprintf(`jumpcloud_application.test_application_%s`, rName), "display_label", "test_aws_account"),
 				),
@@ -32,10 +32,10 @@ func Test_resourceApplication(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`resource "jumpcloud_application" "test_application_%s" {
 						display_label = "test_aws_account2"
-						sso_url = "https://sso.jumpcloud.com/saml2/example-application"
+						sso_url = "https://sso.jumpcloud.com/saml2/example-application_%s"
 						saml_role_attribute = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
 						aws_session_duration = 432000
-					}`, rName),
+					}`, rName, rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_application.test_application_%s", rName), "display_label", "test_aws_account2"),
 				),
