@@ -12,6 +12,10 @@ func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
 		Description: "Use this data source to get information about the JumpCloud LDAP directory.",
 		ReadContext: dataSourceJumpCloudLDAPDirectoryRead,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"name": {
 				Description: "Name of the LDAP directory. Example: `JumpCloud LDAP`.",
 				Type:        schema.TypeString,

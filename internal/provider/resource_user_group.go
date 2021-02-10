@@ -107,9 +107,10 @@ func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta int
 	if err := d.Set("name", group.Name); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("attributes", flattenAttributes(&group.Attributes)); err != nil {
-		return diag.FromErr(err)
-	}
+	// TODO bring back after attributes are set correctly
+	//if err := d.Set("attributes", flattenAttributes(&group.Attributes)); err != nil {
+	//	return diag.FromErr(err)
+	//}
 
 	return nil
 }

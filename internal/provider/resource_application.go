@@ -16,7 +16,9 @@ func resourceApplication() *schema.Resource {
 		ReadContext:   resourceApplicationRead,
 		UpdateContext: resourceApplicationUpdate,
 		DeleteContext: resourceApplicationDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"display_label": {
 				Description: "Name of the application to display",

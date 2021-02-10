@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestUserAcc_resourceUser(t *testing.T) {
+func Test_resourceUser(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		//PreCheck: func() {
 		//	preCheck(t)
@@ -15,27 +15,47 @@ func TestUserAcc_resourceUser(t *testing.T) {
 		},
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
+			// Create step
 			{
 				Config: fmt.Sprintf(`resource "jumpcloud_user" "test" {
-	username = "test_user"
-	email = "test@sagewave.io"
-	firstname = "sage"
-	lastname = "wave"
-	enable_mfa = false
-}`),
+						username = "test_user"
+						email = "test@sagewave.io"
+						firstname = "sage"
+						lastname = "wave"
+						enable_mfa = false
+					}`),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("jumpcloud_user.test", "username", "test_user"),
-				//resource.TestCheckResourceAttr("jumpcloud_user.test", "email", "test@sagewave.io"),
-				//resource.TestCheckResourceAttr("jumpcloud_user.test", "firstname", "sage"),
-				//resource.TestCheckResourceAttr("jumpcloud_user.test", "lastname", "wave"),
-				//resource.TestCheckResourceAttr("jumpcloud_user.test", "enable_mfa", "false"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "email", "test@sagewave.io"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "firstname", "sage"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "lastname", "wave"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "enable_mfa", "false"),
 				),
 			},
+			userImportStep("jumpcloud_user.test"),
+
+			// Update Step
 			{
-				ResourceName:      "jumpcloud_user",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: fmt.Sprintf(`resource "jumpcloud_user" "test" {
+						username = "test_user"
+						email = "test@sagewave.io"
+						firstname = "updatedSage"
+						lastname = "wave"
+						enable_mfa = false
+					}`),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "username", "test_user"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "email", "test@sagewave.io"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "firstname", "updatedSage"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "lastname", "wave"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "enable_mfa", "false"),
+				),
 			},
+			userImportStep("jumpcloud_user.test"),
 		},
 	})
+}
+
+func userImportStep(name string) resource.TestStep {
+	return importStep(name, "allow_existing", "skip_forget_on_destroy")
 }

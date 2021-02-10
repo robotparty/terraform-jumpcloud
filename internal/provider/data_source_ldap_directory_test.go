@@ -6,17 +6,16 @@ import (
 	"testing"
 )
 
-func dataSourceJumpCloudGSuiteDirectoryTest(t *testing.T) {
+func Test_dataSourceJumpCloudLdapDirectory(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() {},
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`resource "g_suite" "test" {
-	name = test
-	type = g_suite
-}
-`),
+				Config: fmt.Sprintf(`data "jumpcloud_ldap_directory" "test" {
+				}`),
+
+				Check: resource.ComposeTestCheckFunc(),
 			},
 		},
 	})

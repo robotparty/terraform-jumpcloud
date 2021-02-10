@@ -12,6 +12,10 @@ func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 		Description: "Use this data source to get information about a JumpCloud G Suite directory.",
 		ReadContext: dataSourceJumpCloudGSuiteDirectoryRead,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"name": {
 				Description: "The user defined name, e.g. `My G Suite directory`.",
 				Type:        schema.TypeString,

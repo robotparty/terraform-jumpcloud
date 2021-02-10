@@ -12,6 +12,10 @@ func dataSourceJumpCloudOffice365Directory() *schema.Resource {
 		Description: "Use this data source to get information about a JumpCloud Office 365 directory.",
 		ReadContext: dataSourceJumpCloudOffice365DirectoryRead,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"name": {
 				Description: "The user defined name, e.g. `My G Suite directory`.",
 				Type:        schema.TypeString,

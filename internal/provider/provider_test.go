@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 
@@ -41,4 +42,18 @@ func preCheck(t *testing.T) {
 			t.Fatalf("Unable to test missing environment varialbe: %s", required_variable)
 		}
 	}
+}
+
+func importStep(name string, ignore ...string) resource.TestStep {
+	step := resource.TestStep{
+		ResourceName:      name,
+		ImportState:       true,
+		ImportStateVerify: true,
+	}
+
+	if len(ignore) > 0 {
+		step.ImportStateVerifyIgnore = ignore
+	}
+
+	return step
 }
