@@ -19,7 +19,7 @@ func TestAccUserGroupMembership(t *testing.T) {
 				Config: fmt.Sprintf(`
 		resource "jumpcloud_user" "test_user_%s" {
 		username = "test_user_%s"
-		email = "test@sagewave.io"
+		email = "test_%s@sagewave.io"
 		firstname = "sage"
 		lastname = "wave"
 		enable_mfa = false
@@ -33,7 +33,7 @@ func TestAccUserGroupMembership(t *testing.T) {
   			user_id = "${jumpcloud_user.test_user_%s.id}"
 			group_id = "${jumpcloud_user_group.test_group_%s.id}"
   		}
-	`, rName, rName, rName, rName, rName, rName, rName),
+	`, rName, rName, rName, rName, rName, rName, rName, rName),
 				Check: resource.TestCheckResourceAttrSet(fmt.Sprintf("jumpcloud_user_group_membership.test_membership_%s", rName),
 					"user_id"),
 			},

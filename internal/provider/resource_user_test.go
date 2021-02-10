@@ -23,14 +23,14 @@ func Test_resourceUser(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`resource "jumpcloud_user" "test_%s" {
 						username = "test_user_%s"
-						email = "test@sagewave.io"
+						email = "test_%s@sagewave.io"
 						firstname = "sage"
 						lastname = "wave"
 						enable_mfa = false
-					}`, rName, rName),
+					}`, rName, rName, rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "username", fmt.Sprintf("test_user_%s", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", "test@sagewave.io"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", fmt.Sprintf("test_%s@sagewave.io", rName)),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "firstname", "sage"),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "lastname", "wave"),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "enable_mfa", "false"),
@@ -42,14 +42,14 @@ func Test_resourceUser(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`resource "jumpcloud_user" "test_%s" {
 						username = "test_user_%s"
-						email = "test@sagewave.io"
+						email = "test_%s@sagewave.io"
 						firstname = "updatedSage"
 						lastname = "wave"
 						enable_mfa = false
-					}`, rName, rName),
+					}`, rName, rName, rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "username", fmt.Sprintf("test_user_%s", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", "test@sagewave.io"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", fmt.Sprintf("test_%s@sagewave.io", rName)),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "firstname", "updatedSage"),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "lastname", "wave"),
 					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "enable_mfa", "false"),
