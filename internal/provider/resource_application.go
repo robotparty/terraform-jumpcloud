@@ -58,28 +58,7 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
-	payload := jcapiv1.Application{
-		// TODO clearify if previous Active: true is translated to Beta: false
-		Beta:         false,
-		Name:         "aws",
-		DisplayLabel: d.Get("display_label").(string),
-		SsoUrl:       d.Get("sso_url").(string),
-		Config: &jcapiv1.ApplicationConfig{
-			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
-				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
-					{
-						Name:  AttributeNameAwsSessionDuration,
-						Value: d.Get("aws_session_duration").(string),
-					},
-					{
-						Name:  AttributeNameAwsRole,
-						Value: d.Get("saml_role_attribute").(string),
-					},
-				},
-			},
-		},
-	}
-
+	payload := generateAwsPayload(d)
 	request := map[string]interface{}{
 		"body": payload,
 	}
@@ -156,28 +135,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
-	payload := jcapiv1.Application{
-		// TODO clearify if previous Active: true is translated to Beta: false
-		Beta:         false,
-		Name:         "aws",
-		DisplayLabel: d.Get("display_label").(string),
-		SsoUrl:       d.Get("sso_url").(string),
-		Config: &jcapiv1.ApplicationConfig{
-			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
-				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
-					{
-						Name:  AttributeNameAwsSessionDuration,
-						Value: d.Get("aws_session_duration").(string),
-					},
-					{
-						Name:  AttributeNameAwsRole,
-						Value: d.Get("saml_role_attribute").(string),
-					},
-				},
-			},
-		},
-	}
-
+	payload := generateAwsPayload(d)
 	request := map[string]interface{}{
 		"body": payload,
 	}
@@ -200,4 +158,28 @@ func resourceApplicationDelete(_ context.Context, d *schema.ResourceData, meta i
 
 	d.SetId("")
 	return nil
+}
+
+func generateAwsPayload(d *schema.ResourceData) jcapiv1.Application {
+	return jcapiv1.Application{
+		// TODO clearify if previous Active: true is translated to Beta: false
+		Beta:         false,
+		Name:         "aws",
+		DisplayLabel: d.Get("display_label").(string),
+		SsoUrl:       d.Get("sso_url").(string),
+		Config: &jcapiv1.ApplicationConfig{
+			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
+				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
+					{
+						Name:  AttributeNameAwsSessionDuration,
+						Value: d.Get("aws_session_duration").(string),
+					},
+					{
+						Name:  AttributeNameAwsRole,
+						Value: d.Get("saml_role_attribute").(string),
+					},
+				},
+			},
+		},
+	}
 }
