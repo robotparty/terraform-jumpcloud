@@ -88,7 +88,7 @@ func resourceUserGroupAssociationCreate(ctx context.Context, d *schema.ResourceD
 	return resourceUserGroupAssociationRead(ctx, d, meta)
 }
 
-func resourceUserGroupAssociationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupAssociationRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
@@ -117,7 +117,7 @@ func resourceUserGroupAssociationRead(ctx context.Context, d *schema.ResourceDat
 	return nil
 }
 
-func resourceUserGroupAssociationDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupAssociationDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 	return modifyUserGroupAssociation(client, d, "remove")

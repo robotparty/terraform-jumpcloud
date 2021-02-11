@@ -33,7 +33,7 @@ func resourceUserGroupMembership() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			State: userGroupMembershipImporter,
+			StateContext: userGroupMembershipImporter,
 		},
 	}
 }
@@ -42,10 +42,10 @@ func resourceUserGroupMembership() *schema.Resource {
 // populated.- In our case, we need the group ID and user ID to do the read - But since our
 // artificial resource ID is simply the concatenation of user ID group ID seperated by  a '/',
 // we can derive both values during our import process
-func userGroupMembershipImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func userGroupMembershipImporter(_ context.Context, d *schema.ResourceData, _ interface{}) ([]*schema.ResourceData, error) {
 	s := strings.Split(d.Id(), "/")
-	d.Set("group_id", s[0])
-	d.Set("user_id", s[1])
+	_ = d.Set("group_id", s[0])
+	_ = d.Set("user_id", s[1])
 	return []*schema.ResourceData{d}, nil
 }
 
@@ -79,7 +79,7 @@ func resourceUserGroupMembershipCreate(ctx context.Context, d *schema.ResourceDa
 	return resourceUserGroupMembershipRead(ctx, d, meta)
 }
 
-func resourceUserGroupMembershipRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupMembershipRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
@@ -109,7 +109,7 @@ func resourceUserGroupMembershipRead(ctx context.Context, d *schema.ResourceData
 	return nil
 }
 
-func resourceUserGroupMembershipDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupMembershipDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 	return modifyUserGroupMembership(client, d, "remove")

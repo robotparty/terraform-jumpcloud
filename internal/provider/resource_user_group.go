@@ -53,7 +53,7 @@ func resourceUserGroup() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
@@ -89,7 +89,7 @@ func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, meta i
 // JC's HTTP API directly; the groups' attributes need to be kept in state
 // as they are required for resourceUserGroupUpdate and the current
 // implementation of the JC SDK doesn't support their retrieval
-func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 
 	group, ok, err := userGroupReadHelper(config, d.Id())
@@ -172,7 +172,7 @@ func resourceUserGroupUpdate(ctx context.Context, d *schema.ResourceData, meta i
 	return resourceUserGroupRead(ctx, d, meta)
 }
 
-func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserGroupDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 

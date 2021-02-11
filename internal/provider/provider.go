@@ -61,7 +61,7 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-func configure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func configure(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	config := Config{
 		APIKey: d.Get("api_key").(string),
 		OrgId:  d.Get("org_id").(string),

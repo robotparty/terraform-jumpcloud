@@ -17,7 +17,7 @@ func resourceApplication() *schema.Resource {
 		UpdateContext: resourceApplicationUpdate,
 		DeleteContext: resourceApplicationDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 		Schema: map[string]*schema.Schema{
 			"display_label": {
@@ -48,15 +48,6 @@ func resourceApplication() *schema.Resource {
 		},
 	}
 }
-
-// We receive a v2config from the TF base code but need a v1config to continue. So, we take the only
-// preloaded element (the x-api-key) and populate the v1config with it.
-//func convertV2toV1Config(v2config *jcapiv2.Configuration) *jcapiv1.Configuration {
-//	configv1 := jcapiv1.NewConfiguration()
-//	configv1.AddDefaultHeader("x-api-key", v2config.DefaultHeader["x-api-key"])
-//	configv1.AddDefaultHeader("x-org-id", v2config.DefaultHeader["x-org-id"])
-//	return configv1
-//}
 
 func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
@@ -97,7 +88,7 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 	return resourceApplicationRead(ctx, d, meta)
 }
 
-func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceApplicationRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
@@ -193,7 +184,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 	return resourceApplicationRead(ctx, d, meta)
 }
 
-func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceApplicationDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 

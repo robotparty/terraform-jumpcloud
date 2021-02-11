@@ -46,7 +46,7 @@ func resourceUser() *schema.Resource {
 			// JumpCloud offers a lot more
 		},
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
@@ -86,7 +86,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, meta interf
 	return resourceUserRead(ctx, d, meta)
 }
 
-func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 
@@ -148,7 +148,7 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 	return resourceUserRead(ctx, d, meta)
 }
 
-func resourceUserDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceUserDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	configv1 := convertV2toV1Config(meta.(*jcapiv2.Configuration))
 	client := jcapiv1.NewAPIClient(configv1)
 

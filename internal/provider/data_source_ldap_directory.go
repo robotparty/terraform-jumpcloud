@@ -30,7 +30,7 @@ func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
 	}
 }
 
-func dataSourceJumpCloudLDAPDirectoryRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func dataSourceJumpCloudLDAPDirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
@@ -44,10 +44,10 @@ func dataSourceJumpCloudLDAPDirectoryRead(ctx context.Context, d *schema.Resourc
 	for _, dir := range directories {
 		if dir.Type_ == "ldap_server" {
 			d.SetId(dir.Id)
-			d.Set("name", dir.Name)
-			d.Set("type", dir.Type_)
+			_ = d.Set("name", dir.Name)
+			_ = d.Set("type", dir.Type_)
+			return nil
 		}
-		return nil
 	}
 
 	return diag.Errorf("couldn't find a directory with type 'ldap_server'")

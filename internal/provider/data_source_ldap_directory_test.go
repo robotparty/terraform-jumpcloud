@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -12,11 +11,14 @@ func Test_dataSourceJumpCloudLdapDirectory(t *testing.T) {
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`data "jumpcloud_ldap_directory" "test" {
-				}`),
-
-				Check: resource.ComposeTestCheckFunc(),
+				Config: dataLdapDirectoryConfig,
+				Check:  resource.ComposeTestCheckFunc(),
 			},
 		},
 	})
 }
+
+const dataLdapDirectoryConfig = `
+data "jumpcloud_ldap_directory" "test" {
+}
+`

@@ -30,7 +30,7 @@ func dataSourceJumpCloudOffice365Directory() *schema.Resource {
 	}
 }
 
-func dataSourceJumpCloudOffice365DirectoryRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func dataSourceJumpCloudOffice365DirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*jcapiv2.Configuration)
 	client := jcapiv2.NewAPIClient(config)
 
@@ -44,10 +44,10 @@ func dataSourceJumpCloudOffice365DirectoryRead(ctx context.Context, d *schema.Re
 	for _, dir := range directories {
 		if dir.Type_ == "office_365" {
 			d.SetId(dir.Id)
-			d.Set("name", dir.Name)
-			d.Set("type", dir.Type_)
+			_ = d.Set("name", dir.Name)
+			_ = d.Set("type", dir.Type_)
+			return nil
 		}
-		return nil
 	}
 
 	return diag.Errorf("couldn't find a directory with type 'office_365'")
