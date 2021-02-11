@@ -2,7 +2,6 @@
 # you can turn it on using a cron schedule for regular testing.
 #
 name: Tests
-description: Runs acceptance tests in a matrix with different Terraform versions
 
 on:
   pull_request:
