@@ -1,9 +1,9 @@
 # Terraform Provider JumpCloud
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud2&metric=alert_status)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud2)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud2&metric=coverage)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud2)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud2&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud2)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud2&metric=ncloc)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud2)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=alert_status)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=coverage)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=ncloc)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
 
 The JumpCloud provider provides resources to interact with the JumpCloud API v1 and v2. The provider is published to the Terraform registry and can be used in the same way as any other provider. For detailed documentation with usage examples [view the generated docs in the Terraform registry](https://registry.terraform.io/providers/sagewave/jumpcloud/latest/docs).
 
