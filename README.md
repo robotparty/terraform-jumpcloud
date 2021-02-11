@@ -5,7 +5,11 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=ncloc)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
 
-The JumpCloud provider provides resources to interact with the JumpCloud API v1 and v2. The provider is published to the Terraform registry and can be used in the same way as any other provider. For detailed documentation with usage examples [view the generated docs in the Terraform registry](https://registry.terraform.io/providers/sagewave/jumpcloud/latest/docs).
+The JumpCloud provider provides resources to interact with the JumpCloud API v1 and v2. 
+
+## Usage
+
+The provider is published to the Terraform registry and can be used in the same way as any other provider. For detailed documentation with usage examples [view the generated docs in the Terraform registry](https://registry.terraform.io/providers/sagewave/jumpcloud/latest/docs).
 
 ## Requirements
 
@@ -48,11 +52,8 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 *Note:* Acceptance tests create real resources, and often cost money to run.
 
 ```sh
-$ make testacc
+$ JUMPCLOUD_API_KEY=xxx JUMPCLOUD_ORG_ID=xxx make testacc
 ```
+## Acknowledgement
 
-## Testing
-Required env variables:
-- JUMPCLOUD_ORG_ID
-- JUMPCLOUD_API_KEY
-- TF_ACC=1
+This repo is based on [https://github.com/CognotektGmbH/terraform-provider-jumpcloud](https://github.com/CognotektGmbH/terraform-provider-jumpcloud)

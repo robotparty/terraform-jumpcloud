@@ -1,6 +1,8 @@
 package provider
 
 import (
+	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
+	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
 	"github.com/go-resty/resty/v2"
 	"log"
 )
@@ -37,4 +39,19 @@ func stringInSlice(a string, list []string) bool {
 		}
 	}
 	return false
+}
+
+// We receive a v2config from the TF base code but need a v1config to continue. So, we take the only
+// preloaded element (the x-api-key) and populate the v1config with it.
+func convertV2toV1Config(v2config *jcapiv2.Configuration) *jcapiv1.Configuration {
+	const apiKeyHeader = "x-api-key"
+	const orgIdHeader = "x-org-id"
+
+	configv1 := jcapiv1.NewConfiguration()
+
+	configv1.AddDefaultHeader(apiKeyHeader, v2config.DefaultHeader[apiKeyHeader])
+	if v2config.DefaultHeader[orgIdHeader] != "" {
+		configv1.AddDefaultHeader(orgIdHeader, v2config.DefaultHeader[orgIdHeader])
+	}
+	return configv1
 }

@@ -9,6 +9,11 @@ import (
 	"log"
 )
 
+const (
+	AttributeNameAwsSessionDuration = "https://aws.amazon.com/SAML/Attributes/SessionDuration"
+	AttributeNameAwsRole            = "https://aws.amazon.com/SAML/Attributes/Role"
+)
+
 func resourceApplication() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Provides a resource for adding an Amazon Web Services (AWS) account application. **Note:** This resource is due to change in future versions to be more generic and allow for adding various applications supported by JumpCloud.",
@@ -63,11 +68,11 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
 				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
 					{
-						Name:  "https://aws.amazon.com/SAML/Attributes/SessionDuration",
+						Name:  AttributeNameAwsSessionDuration,
 						Value: d.Get("aws_session_duration").(string),
 					},
 					{
-						Name:  "https://aws.amazon.com/SAML/Attributes/Role",
+						Name:  AttributeNameAwsRole,
 						Value: d.Get("saml_role_attribute").(string),
 					},
 				},
@@ -114,13 +119,13 @@ func resourceApplicationRead(_ context.Context, d *schema.ResourceData, meta int
 
 	constantAttributeValues := response.Config.ConstantAttributes.Value
 	for _, el := range constantAttributeValues {
-		if el.Name == "https://aws.amazon.com/SAML/Attributes/SessionDuration" {
+		if el.Name == AttributeNameAwsSessionDuration {
 			if err := d.Set("aws_session_duration", el.Value); err != nil {
 				return diag.FromErr(err)
 			}
 		}
 
-		if el.Name == "https://aws.amazon.com/SAML/Attributes/Role" {
+		if el.Name == AttributeNameAwsRole {
 			if err := d.Set("saml_role_attribute", el.Value); err != nil {
 				return diag.FromErr(err)
 			}
@@ -161,11 +166,11 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
 				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
 					{
-						Name:  "https://aws.amazon.com/SAML/Attributes/SessionDuration",
+						Name:  AttributeNameAwsSessionDuration,
 						Value: d.Get("aws_session_duration").(string),
 					},
 					{
-						Name:  "https://aws.amazon.com/SAML/Attributes/Role",
+						Name:  AttributeNameAwsRole,
 						Value: d.Get("saml_role_attribute").(string),
 					},
 				},
