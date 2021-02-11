@@ -2,6 +2,8 @@
 # you can turn it on using a cron schedule for regular testing.
 #
 name: Tests
+description: Runs acceptance tests in a matrix with different Terraform versions
+
 on:
   pull_request:
     paths-ignore:
@@ -13,8 +15,8 @@ on:
   # we recommend testing at a regular interval not necessarily tied to code changes. This will 
   # ensure you are alerted to something breaking due to an API change, even if the code did not
   # change.
-  # schedule:
-  #   - cron: '0 13 * * *'
+  schedule:
+    - cron: '0 13 * * *'
 jobs:
   # ensure the code builds...
   build:
@@ -53,7 +55,7 @@ jobs:
         terraform:
           - '0.12.29'
           - '0.13.4'
-          - '0.14.0-beta2'
+          - '0.14.6'
     steps:
 
     - name: Set up Go
@@ -83,4 +85,11 @@ jobs:
         # SOME_VAR: ${{ secrets.SOME_VAR }}
 
       run: |
-        go test -v -cover ./internal/provider/
+        go test -json ./internal/provider/ > report.json
+        go test -coverprofile=coverage.out
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
