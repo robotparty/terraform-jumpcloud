@@ -8,54 +8,50 @@ import (
 )
 
 func Test_resourceUser(t *testing.T) {
-
-	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	randomSuffix := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
 	resource.ParallelTest(t, resource.TestCase{
-		//PreCheck: func() {
-		//	preCheck(t)
-		//},
 		PreCheck: func() {
 		},
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			// Create step
 			{
-				Config: fmt.Sprintf(`resource "jumpcloud_user" "test_%s" {
-						username = "test_user_%s"
-						email = "test_%s@sagewave.io"
-						firstname = "sage"
-						lastname = "wave"
+				Config: fmt.Sprintf(`resource "jumpcloud_user" "test" {
+						username   = "test_user_%s"
+						email      = "test_%s@sagewave.io"
+						firstname  = "sage"
+						lastname   = "wave"
 						enable_mfa = false
-					}`, rName, rName, rName),
+					}`, randomSuffix, randomSuffix),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "username", fmt.Sprintf("test_user_%s", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", fmt.Sprintf("test_%s@sagewave.io", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "firstname", "sage"),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "lastname", "wave"),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "enable_mfa", "false"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "username", fmt.Sprintf("test_user_%s", randomSuffix)),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "email", fmt.Sprintf("test_%s@sagewave.io", randomSuffix)),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "firstname", "sage"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "lastname", "wave"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "enable_mfa", "false"),
 				),
 			},
-			userImportStep(fmt.Sprintf("jumpcloud_user.test_%s", rName)),
+			userImportStep("jumpcloud_user.test"),
 
 			// Update Step
 			{
-				Config: fmt.Sprintf(`resource "jumpcloud_user" "test_%s" {
+				Config: fmt.Sprintf(`resource "jumpcloud_user" "test" {
 						username = "test_user_%s"
 						email = "test_%s@sagewave.io"
 						firstname = "updatedSage"
 						lastname = "wave"
 						enable_mfa = false
-					}`, rName, rName, rName),
+					}`, randomSuffix, randomSuffix),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "username", fmt.Sprintf("test_user_%s", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "email", fmt.Sprintf("test_%s@sagewave.io", rName)),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "firstname", "updatedSage"),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "lastname", "wave"),
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user.test_%s", rName), "enable_mfa", "false"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "username", fmt.Sprintf("test_user_%s", randomSuffix)),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "email", fmt.Sprintf("test_%s@sagewave.io", randomSuffix)),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "firstname", "updatedSage"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "lastname", "wave"),
+					resource.TestCheckResourceAttr("jumpcloud_user.test", "enable_mfa", "false"),
 				),
 			},
-			userImportStep(fmt.Sprintf("jumpcloud_user.test_%s", rName)),
+			userImportStep("jumpcloud_user.test"),
 		},
 	})
 }

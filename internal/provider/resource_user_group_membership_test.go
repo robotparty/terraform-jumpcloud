@@ -8,7 +8,7 @@ import (
 )
 
 func TestAccUserGroupMembership(t *testing.T) {
-	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	randomSuffix := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() {},
@@ -16,27 +16,31 @@ func TestAccUserGroupMembership(t *testing.T) {
 		CheckDestroy:      nil,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-		resource "jumpcloud_user" "test_user_%s" {
-		username = "test_user_%s"
-		email = "test_%s@sagewave.io"
-		firstname = "sage"
-		lastname = "wave"
-		enable_mfa = false
-	}
-
-		resource "jumpcloud_user_group" "test_group_%s" {
-			name = "testgroup_%s"
-		}
-
-		resource "jumpcloud_user_group_membership" "test_membership_%s" {
-  			user_id = "${jumpcloud_user.test_user_%s.id}"
-			group_id = "${jumpcloud_user_group.test_group_%s.id}"
-  		}
-	`, rName, rName, rName, rName, rName, rName, rName, rName),
-				Check: resource.TestCheckResourceAttrSet(fmt.Sprintf("jumpcloud_user_group_membership.test_membership_%s", rName),
+				Config: testUserGroupMembershipConfig(randomSuffix),
+				Check: resource.TestCheckResourceAttrSet("jumpcloud_user_group_membership.test_membership",
 					"user_id"),
 			},
 		},
 	})
+}
+
+func testUserGroupMembershipConfig(randSuffix string) string {
+	return fmt.Sprintf(`
+resource "jumpcloud_user" "test_user" {
+	username   = "test_user_%s"
+	email      = "test_%s@sagewave.io"
+	firstname  = "sage"
+	lastname   = "wave"
+	enable_mfa = false
+}
+
+resource "jumpcloud_user_group" "test_group" {
+	name = "testgroup_%s"
+}
+
+resource "jumpcloud_user_group_membership" "test_membership" {
+	user_id  = jumpcloud_user.test_user.id
+	group_id = jumpcloud_user_group.test_group.id
+}
+`, randSuffix, randSuffix, randSuffix)
 }

@@ -8,7 +8,8 @@ import (
 )
 
 func Test_resourceApplication(t *testing.T) {
-	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	randSuffix := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	fullResourceName := "jumpcloud_application.example_app"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,30 +18,31 @@ func Test_resourceApplication(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create step
 			{
-				Config: fmt.Sprintf(`resource "jumpcloud_application" "test_application_%s" {
-						display_label = "test_aws_account"
-						sso_url = "https://sso.jumpcloud.com/saml2/example-application_%s"
-						saml_role_attribute = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
-						aws_session_duration = 432000
-					}`, rName, rName),
+				Config: testApplicationConfig(randSuffix, "test_aws_account"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf(`jumpcloud_application.test_application_%s`, rName), "display_label", "test_aws_account"),
+					resource.TestCheckResourceAttr(fullResourceName, "display_label", "test_aws_account"),
 				),
 			},
-			userImportStep(fmt.Sprintf(`jumpcloud_application.test_application_%s`, rName)),
+			userImportStep(fullResourceName),
 			// Update Step
 			{
-				Config: fmt.Sprintf(`resource "jumpcloud_application" "test_application_%s" {
-						display_label = "test_aws_account2"
-						sso_url = "https://sso.jumpcloud.com/saml2/example-application_%s"
-						saml_role_attribute = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
-						aws_session_duration = 432000
-					}`, rName, rName),
+				Config: testApplicationConfig(randSuffix, "test_aws_account_updated"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_application.test_application_%s", rName), "display_label", "test_aws_account2"),
+					resource.TestCheckResourceAttr(fullResourceName, "display_label", "test_aws_account_updated"),
 				),
 			},
-			userImportStep(fmt.Sprintf("jumpcloud_application.test_application_%s", rName)),
+			userImportStep(fullResourceName),
 		},
 	})
+}
+
+func testApplicationConfig(randSuffix string, displayLabel string) string {
+	return fmt.Sprintf(`
+resource "jumpcloud_application" "example_app" {
+	display_label        = "%s"
+	sso_url              = "https://sso.jumpcloud.com/saml2/example-application_%s"
+	saml_role_attribute  = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
+	aws_session_duration = 432000
+}
+`, displayLabel, randSuffix)
 }

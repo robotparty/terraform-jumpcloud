@@ -35,3 +35,5 @@ website/vendor
 *.winfile eol=crlf
 /terraform-provider-jumpcloud
 /examples/provider/.terraform.lock.hcl
+/coverage.out
+/report.json

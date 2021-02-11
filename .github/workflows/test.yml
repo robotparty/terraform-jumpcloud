@@ -85,7 +85,7 @@ jobs:
 
       run: |
         go test -json ./internal/provider/ > report.json
-        go test -coverprofile=coverage.out
+        go test -coverprofile=coverage.out ./internal/provider/
 
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master

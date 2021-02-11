@@ -8,35 +8,39 @@ import (
 )
 
 func TestAccUserGroupAssociation(t *testing.T) {
+	randSuffix := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
-	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() {},
 		ProviderFactories: providerFactories,
 		CheckDestroy:      nil,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-		resource "jumpcloud_application" "test_application_%s" {
-						display_label = "test_aws_account"
-						sso_url = "https://sso.jumpcloud.com/saml2/example-application"
-						saml_role_attribute = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
-						aws_session_duration = 432000
-		}
-
-		resource "jumpcloud_user_group" "test_group_%s" {
-			name = "testgroup_%s"
-		}
-
-		resource "jumpcloud_user_group_association" "test_association_%s" {
- 			object_id = "${jumpcloud_application.test_application_%s.id}"
-			group_id = "${jumpcloud_user_group.test_group_%s.id}"
-			type = "application"
- 		}
-	`, rName, rName, rName, rName, rName, rName),
-				Check: resource.TestCheckResourceAttrSet(fmt.Sprintf(`jumpcloud_user_group_association.test_association_%s`, rName),
+				Config: testUserGroupAssocConfig(randSuffix),
+				Check: resource.TestCheckResourceAttrSet("jumpcloud_user_group_association.test_association",
 					"group_id"),
 			},
 		},
 	})
+}
+
+func testUserGroupAssocConfig(randSuffix string) string {
+	return fmt.Sprintf(`
+resource "jumpcloud_application" "test_application" {
+	display_label        = "test_aws_account_%s"
+	sso_url              = "https://sso.jumpcloud.com/saml2/example-application-%s"
+	saml_role_attribute  = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
+	aws_session_duration = 432000
+}
+
+resource "jumpcloud_user_group" "test_group" {
+	name = "testgroup_%s"
+}
+
+resource "jumpcloud_user_group_association" "test_association" {
+	object_id = jumpcloud_application.test_application.id
+	group_id  = jumpcloud_user_group.test_group.id
+	type      = "application"
+}
+`, randSuffix, randSuffix, randSuffix)
 }

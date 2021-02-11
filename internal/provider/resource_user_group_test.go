@@ -9,7 +9,7 @@ import (
 
 // TODO attributes needs to be fixed
 func Test_resourceUserGroup(t *testing.T) {
-	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	randSuffix := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
 	resource.ParallelTest(t, resource.TestCase{
 		//PreCheck: func() {
@@ -22,14 +22,16 @@ func Test_resourceUserGroup(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create step
 			{
-				Config: fmt.Sprintf(`resource "jumpcloud_user_group" "test_%s" {
-name = "test_group_%s"
-}`, rName, rName),
+				Config: fmt.Sprintf(`
+resource "jumpcloud_user_group" "test" {
+	name = "test_group_%s"
+}
+`, randSuffix),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("jumpcloud_user_group.test_%s", rName), "name", fmt.Sprintf("test_group_%s", rName)),
+					resource.TestCheckResourceAttr("jumpcloud_user_group.test", "name", fmt.Sprintf("test_group_%s", randSuffix)),
 				),
 			},
-			userImportStep(fmt.Sprintf("jumpcloud_user_group.test_%s", rName)),
+			userImportStep("jumpcloud_user_group.test"),
 		},
 	})
 }
