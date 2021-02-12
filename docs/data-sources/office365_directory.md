@@ -12,18 +12,20 @@ Use this data source to get information about a JumpCloud Office 365 directory.
 ## Example Usage
 
 ```terraform
-data "jumpcloud_office365_directory" "example" {}
+data "jumpcloud_office365_directory" "example" {
+  name = "My Office 365 Directory"
+}
 ```
 
 ## Schema
 
-### Optional
+### Required
 
-- **id** (String) The ID of this resource.
+- **name** (String) The user defined name, e.g. `My G Suite directory`.
 
 ### Read-only
 
-- **name** (String) The user defined name, e.g. `My G Suite directory`.
+- **id** (String) The ID of this resource.
 - **type** (String) The directory type. This will always be `office_365`.
 
 

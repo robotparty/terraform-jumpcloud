@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"context"
+	"errors"
 	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
 	"github.com/go-resty/resty/v2"
@@ -54,4 +56,25 @@ func convertV2toV1Config(v2config *jcapiv2.Configuration) *jcapiv1.Configuration
 		configv1.AddDefaultHeader(orgIdHeader, v2config.DefaultHeader[orgIdHeader])
 	}
 	return configv1
+}
+
+// generic function to retrieve all directories from JumpCloud and to filter them as specified by the test function
+func filterJumpCloudDirectories(meta interface{}, test func(directory jcapiv2.Directory) bool) (jcapiv2.Directory, error) {
+	config := meta.(*jcapiv2.Configuration)
+	client := jcapiv2.NewAPIClient(config)
+
+	directories, _, err := client.DirectoriesApi.DirectoriesList(
+		context.TODO(), "", "", nil)
+
+	if err != nil {
+		return jcapiv2.Directory{}, err
+	}
+
+	for _, dir := range directories {
+		if test(dir) {
+			return dir, nil
+		}
+	}
+
+	return jcapiv2.Directory{}, errors.New("could not find directory with specified parameters")
 }

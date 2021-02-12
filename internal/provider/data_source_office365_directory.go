@@ -19,7 +19,7 @@ func dataSourceJumpCloudOffice365Directory() *schema.Resource {
 			"name": {
 				Description: "The user defined name, e.g. `My G Suite directory`.",
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 			},
 			"type": {
 				Description: "The directory type. This will always be `office_365`.",
@@ -31,24 +31,19 @@ func dataSourceJumpCloudOffice365Directory() *schema.Resource {
 }
 
 func dataSourceJumpCloudOffice365DirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*jcapiv2.Configuration)
-	client := jcapiv2.NewAPIClient(config)
+	filterFunction := func(dir jcapiv2.Directory) bool {
+		return dir.Type_ == "office_365" && dir.Name == d.Get("name")
+	}
 
-	directories, _, err := client.DirectoriesApi.DirectoriesList(
-		context.TODO(), "", "", nil)
+	directory, err := filterJumpCloudDirectories(meta, filterFunction)
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("could not find directory with type 'office_365'. Previous error message: %v", err)
 	}
 
-	// there can only be a single GSuite directory per JumpCloud account
-	for _, dir := range directories {
-		if dir.Type_ == "office_365" {
-			d.SetId(dir.Id)
-			_ = d.Set("name", dir.Name)
-			_ = d.Set("type", dir.Type_)
-			return nil
-		}
-	}
+	d.SetId(directory.Id)
+	_ = d.Set("name", directory.Name)
+	_ = d.Set("type", directory.Type_)
 
-	return diag.Errorf("couldn't find a directory with type 'office_365'")
+	// indicates that everything went well
+	return nil
 }

@@ -9,7 +9,7 @@ import (
 
 func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to get information about the JumpCloud LDAP directory.",
+		Description: "Use this data source to get information about the JumpCloud LDAP directory. Each account has a LDAP directory by default and there can only be one LDAP directory.",
 		ReadContext: dataSourceJumpCloudLDAPDirectoryRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
@@ -31,24 +31,19 @@ func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
 }
 
 func dataSourceJumpCloudLDAPDirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*jcapiv2.Configuration)
-	client := jcapiv2.NewAPIClient(config)
+	filterFunction := func(dir jcapiv2.Directory) bool {
+		return dir.Type_ == "ldap_server"
+	}
 
-	directories, _, err := client.DirectoriesApi.DirectoriesList(
-		context.TODO(), "", "", nil)
+	directory, err := filterJumpCloudDirectories(meta, filterFunction)
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("could not find directory with type 'ldap_server'. Previous error message: %v", err)
 	}
 
-	// there can only be a single GSuite directory per JumpCloud account
-	for _, dir := range directories {
-		if dir.Type_ == "ldap_server" {
-			d.SetId(dir.Id)
-			_ = d.Set("name", dir.Name)
-			_ = d.Set("type", dir.Type_)
-			return nil
-		}
-	}
+	d.SetId(directory.Id)
+	_ = d.Set("name", directory.Name)
+	_ = d.Set("type", directory.Type_)
 
-	return diag.Errorf("couldn't find a directory with type 'ldap_server'")
+	// indicates that everything went well
+	return nil
 }

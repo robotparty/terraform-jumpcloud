@@ -25,7 +25,14 @@ resource "jumpcloud_user_group" "example" {
 
 ### Optional
 
-- **attributes** (Map of String) TODO
+- **attributes** (Block List) TODO (see [below for nested schema](#nestedblock--attributes))
 - **id** (String) The ID of this resource.
+
+<a id="nestedblock--attributes"></a>
+### Nested Schema for `attributes`
+
+Optional:
+
+- **posix_groups** (String)
 
 

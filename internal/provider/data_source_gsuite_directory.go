@@ -19,7 +19,7 @@ func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 			"name": {
 				Description: "The user defined name, e.g. `My G Suite directory`.",
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 			},
 			"type": {
 				Description: "The directory type. This will always be `g_suite`.",
@@ -31,25 +31,19 @@ func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 }
 
 func dataSourceJumpCloudGSuiteDirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*jcapiv2.Configuration)
-	client := jcapiv2.NewAPIClient(config)
+	filterFunction := func(dir jcapiv2.Directory) bool {
+		return dir.Type_ == "g_suite" && dir.Name == d.Get("name")
+	}
 
-	directories, _, err := client.DirectoriesApi.DirectoriesList(
-		context.TODO(), "", "", nil)
+	directory, err := filterJumpCloudDirectories(meta, filterFunction)
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("could not find directory with type 'g_suite'. Previous error message: %v", err)
 	}
 
-	// there can only be a single GSuite directory per JumpCloud account
-	// TODO this is no longer true, there can be multiple G Suite directories per account!
-	for _, dir := range directories {
-		if dir.Type_ == "g_suite" {
-			d.SetId(dir.Id)
-			_ = d.Set("name", dir.Name)
-			_ = d.Set("type", dir.Type_)
-			return nil
-		}
-	}
+	d.SetId(directory.Id)
+	_ = d.Set("name", directory.Name)
+	_ = d.Set("type", directory.Type_)
 
-	return diag.Errorf("couldn't find a directory with type 'g_suite'")
+	// indicates that everything went well
+	return nil
 }
