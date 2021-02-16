@@ -39,10 +39,17 @@ func Test_resourceApplication(t *testing.T) {
 func testApplicationConfig(randSuffix string, displayLabel string) string {
 	return fmt.Sprintf(`
 resource "jumpcloud_application" "example_app" {
+	name  				 = "aws"
 	display_label        = "%s"
 	sso_url              = "https://sso.jumpcloud.com/saml2/example-application_%s"
-	saml_role_attribute  = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
-	aws_session_duration = 432000
+   constant_attribute {
+       name = "https://aws.amazon.com/SAML/Attributes/Role"
+       value = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
+   }
+   constant_attribute {
+       name = "https://aws.amazon.com/SAML/Attributes/SessionDuration"
+       value = 43200
+   }
 }
 `, displayLabel, randSuffix)
 }

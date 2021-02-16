@@ -27,10 +27,17 @@ func TestAccUserGroupAssociation(t *testing.T) {
 func testUserGroupAssocConfig(randSuffix string) string {
 	return fmt.Sprintf(`
 resource "jumpcloud_application" "test_application" {
+	name  				 = "aws"
 	display_label        = "test_aws_account_%s"
 	sso_url              = "https://sso.jumpcloud.com/saml2/example-application-%s"
-	saml_role_attribute  = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
-	aws_session_duration = 432000
+    constant_attribute {
+        name = "https://aws.amazon.com/SAML/Attributes/Role"
+        value = "arn:aws:iam::AWS_ACCOUNT_ID:role/MY_ROLE,arn:aws:iam::AWS_ACCOUNT_ID:saml-provider/MY_SAML_PROVIDER"
+    }
+    constant_attribute {
+        name = "https://aws.amazon.com/SAML/Attributes/SessionDuration"
+        value = 43200
+    }
 }
 
 resource "jumpcloud_user_group" "test_group" {

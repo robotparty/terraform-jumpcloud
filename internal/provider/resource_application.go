@@ -1,10 +1,13 @@
 package provider
 
 import (
+	"fmt"
 	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
 	"golang.org/x/net/context"
 	"log"
 )
@@ -13,6 +16,21 @@ const (
 	AttributeNameAwsSessionDuration = "https://aws.amazon.com/SAML/Attributes/SessionDuration"
 	AttributeNameAwsRole            = "https://aws.amazon.com/SAML/Attributes/Role"
 )
+
+func resourceConstantAttributeSetting() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"value": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+		},
+	}
+}
 
 func resourceApplication() *schema.Resource {
 	return &schema.Resource{
@@ -25,6 +43,11 @@ func resourceApplication() *schema.Resource {
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 		Schema: map[string]*schema.Schema{
+			"name": {
+				Description: "Name of the application",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
 			"display_label": {
 				Description: "Name of the application to display",
 				Type:        schema.TypeString,
@@ -35,15 +58,12 @@ func resourceApplication() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"saml_role_attribute": {
-				Description: "Value of the `https://aws.amazon.com/SAML/Attributes/Role` attribute.",
-				Type:        schema.TypeString,
+			"constant_attribute": {
+				Description: "TODO",
 				Required:    true,
-			},
-			"aws_session_duration": {
-				Description: "Value of the `https://aws.amazon.com/SAML/Attributes/SessionDuration` attribute.",
-				Type:        schema.TypeString,
-				Required:    true,
+				Type:        schema.TypeSet,
+				Elem:        resourceConstantAttributeSetting(),
+				Set:         optionConstantAttributeValueHash,
 			},
 			"metadata_xml": {
 				Description: "The JumpCloud metadata XML file.",
@@ -52,6 +72,15 @@ func resourceApplication() *schema.Resource {
 			},
 		},
 	}
+}
+
+func optionConstantAttributeValueHash(v interface{}) int {
+	rd := v.(map[string]interface{})
+	name := rd["name"].(string)
+	value := rd["value"].(string)
+	value, _ = structure.NormalizeJsonString(value)
+	hk := fmt.Sprintf("%s:%s", name, value)
+	return hashcode.String(hk)
 }
 
 func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -89,6 +118,9 @@ func resourceApplicationRead(_ context.Context, d *schema.ResourceData, meta int
 
 	d.SetId(response.Id)
 
+	if err := d.Set("name", response.Name); err != nil {
+		return diag.FromErr(err)
+	}
 	if err := d.Set("display_label", response.DisplayLabel); err != nil {
 		return diag.FromErr(err)
 	}
@@ -96,19 +128,18 @@ func resourceApplicationRead(_ context.Context, d *schema.ResourceData, meta int
 		return diag.FromErr(err)
 	}
 
-	constantAttributeValues := response.Config.ConstantAttributes.Value
-	for _, el := range constantAttributeValues {
-		if el.Name == AttributeNameAwsSessionDuration {
-			if err := d.Set("aws_session_duration", el.Value); err != nil {
-				return diag.FromErr(err)
-			}
+	allConstantAttributeValues := response.Config.ConstantAttributes.Value
+	var elements []interface{}
+	for _, el := range allConstantAttributeValues {
+		v := map[string]interface{}{
+			"name":  el.Name,
+			"value": el.Value,
 		}
-
-		if el.Name == AttributeNameAwsRole {
-			if err := d.Set("saml_role_attribute", el.Value); err != nil {
-				return diag.FromErr(err)
-			}
-		}
+		elements = append(elements, v)
+	}
+	updatedConstantAttributes := schema.NewSet(optionConstantAttributeValueHash, elements)
+	if err := d.Set("constant_attribute", updatedConstantAttributes.List()); err != nil {
+		return diag.FromErr(err)
 	}
 
 	if response.Id != "" {
@@ -161,24 +192,25 @@ func resourceApplicationDelete(_ context.Context, d *schema.ResourceData, meta i
 }
 
 func generateAwsPayload(d *schema.ResourceData) jcapiv1.Application {
+	constantAttributes := d.Get("constant_attribute").(*schema.Set)
+	payload := []jcapiv1.ApplicationConfigConstantAttributesValue{}
+
+	for _, constantAttribute := range constantAttributes.List() {
+		v := jcapiv1.ApplicationConfigConstantAttributesValue{
+			Name:  constantAttribute.(map[string]interface{})["name"].(string),
+			Value: constantAttribute.(map[string]interface{})["value"].(string),
+		}
+		payload = append(payload, v)
+	}
+
 	return jcapiv1.Application{
-		// TODO clearify if previous Active: true is translated to Beta: false
 		Beta:         false,
-		Name:         "aws",
+		Name:         d.Get("name").(string),
 		DisplayLabel: d.Get("display_label").(string),
 		SsoUrl:       d.Get("sso_url").(string),
 		Config: &jcapiv1.ApplicationConfig{
 			ConstantAttributes: &jcapiv1.ApplicationConfigConstantAttributes{
-				Value: []jcapiv1.ApplicationConfigConstantAttributesValue{
-					{
-						Name:  AttributeNameAwsSessionDuration,
-						Value: d.Get("aws_session_duration").(string),
-					},
-					{
-						Name:  AttributeNameAwsRole,
-						Value: d.Get("saml_role_attribute").(string),
-					},
-				},
+				Value: payload,
 			},
 		},
 	}
