@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_ldap_directory Data Source - terraform-provider-jumpcloud"
+page_title: "jumpcloud_ldap_directory Data Source - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Use this data source to get information about the JumpCloud LDAP directory. Each account has a LDAP directory by default and there can only be one LDAP directory.

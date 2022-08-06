@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_gsuite_directory Data Source - terraform-provider-jumpcloud"
+page_title: "jumpcloud_gsuite_directory Data Source - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Use this data source to get information about a JumpCloud G Suite directory.

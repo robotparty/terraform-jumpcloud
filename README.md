@@ -1,9 +1,9 @@
 # Terraform Provider JumpCloud
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=alert_status)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=coverage)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-provider-jumpcloud&metric=ncloc)](https://sonarcloud.io/dashboard?id=sagewave_terraform-provider-jumpcloud)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-jumpcloud&metric=alert_status)](https://sonarcloud.io/dashboard?id=sagewave_terraform-jumpcloud)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-jumpcloud&metric=coverage)](https://sonarcloud.io/dashboard?id=sagewave_terraform-jumpcloud)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-jumpcloud&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sagewave_terraform-jumpcloud)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sagewave_terraform-jumpcloud&metric=ncloc)](https://sonarcloud.io/dashboard?id=sagewave_terraform-jumpcloud)
 
 The JumpCloud provider provides resources to interact with the JumpCloud API v1 and v2. 
 
@@ -56,4 +56,4 @@ $ JUMPCLOUD_API_KEY=xxx JUMPCLOUD_ORG_ID=xxx make testacc
 ```
 ## Acknowledgement
 
-This repo is based on [https://github.com/CognotektGmbH/terraform-provider-jumpcloud](https://github.com/CognotektGmbH/terraform-provider-jumpcloud)
+This repo is based on [https://github.com/CognotektGmbH/terraform-jumpcloud](https://github.com/CognotektGmbH/terraform-jumpcloud)

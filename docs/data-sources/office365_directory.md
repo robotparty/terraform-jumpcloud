@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_office365_directory Data Source - terraform-provider-jumpcloud"
+page_title: "jumpcloud_office365_directory Data Source - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Use this data source to get information about a JumpCloud Office 365 directory.

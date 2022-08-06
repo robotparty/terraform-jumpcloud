@@ -6,10 +6,7 @@ import (
 
 	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-
-	//"github.com/hashicorp/terraform-plugin-sdk/v2/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
 	"golang.org/x/net/context"

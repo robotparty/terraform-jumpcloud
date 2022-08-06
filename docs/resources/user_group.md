@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_user_group Resource - terraform-provider-jumpcloud"
+page_title: "jumpcloud_user_group Resource - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Provides a JumpCloud user group resource. Refer to the JumpCloud API model https://docs.jumpcloud.com/2.0/models/usergroup for further details.

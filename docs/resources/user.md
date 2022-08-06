@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_user Resource - terraform-provider-jumpcloud"
+page_title: "jumpcloud_user Resource - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Provides a JumpCloud system user resource. For additional information refer also to the JumpCloud API user model https://docs.jumpcloud.com/1.0/models/systemuserpost.

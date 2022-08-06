@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_application Resource - terraform-provider-jumpcloud"
+page_title: "jumpcloud_application Resource - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Provides a resource for adding an Amazon Web Services (AWS) account application. Note: This resource is due to change in future versions to be more generic and allow for adding various applications supported by JumpCloud.

@@ -54,7 +54,7 @@ func New(version string) func() *schema.Provider {
 			},
 		}
 
-		p.UserAgent("terraform-provider-jumpcloud", version)
+		p.UserAgent("terraform-jumpcloud", version)
 		p.ConfigureContextFunc = configure
 
 		return p

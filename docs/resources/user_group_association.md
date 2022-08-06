@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_user_group_association Resource - terraform-provider-jumpcloud"
+page_title: "jumpcloud_user_group_association Resource - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Provides a resource for associating a JumpCloud user group to objects like SSO applications, G Suite, Office 365, LDAP and more.

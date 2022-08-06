@@ -1,5 +1,5 @@
 ---
-page_title: "jumpcloud_user_group_membership Resource - terraform-provider-jumpcloud"
+page_title: "jumpcloud_user_group_membership Resource - terraform-jumpcloud"
 subcategory: ""
 description: |-
   Provides a resource for managing user group memberships.

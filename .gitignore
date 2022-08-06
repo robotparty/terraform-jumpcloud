@@ -33,7 +33,7 @@ website/vendor
 
 # Keep windows files with windows line endings
 *.winfile eol=crlf
-/terraform-provider-jumpcloud
+/terraform-jumpcloud
 /examples/provider/.terraform.lock.hcl
 /coverage.out
 /report.json
