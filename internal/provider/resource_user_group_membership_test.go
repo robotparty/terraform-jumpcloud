@@ -2,9 +2,9 @@ package provider
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	tfp "github.com/hashicorp/terraform-plugin-sdk"
 )
 
 func TestAccUserGroupMembership(t *testing.T) {

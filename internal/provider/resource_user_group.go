@@ -3,11 +3,10 @@ package provider
 import (
 	"context"
 	"encoding/json"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"net/http"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	tfp "github.com/hashicorp/terraform-plugin-sdk"
 )
 
 func resourceUserGroup() *schema.Resource {
