@@ -4,7 +4,7 @@ import (
 	"context"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	tfp "github.com/hashicorp/terraform-plugin-sdk"
+	tfp "github.com/hashicorp/terraform-plugin-sdk/v2"
 )
 
 func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
@@ -30,7 +30,7 @@ func dataSourceJumpCloudGSuiteDirectory() *schema.Resource {
 	}
 }
 
-func dataSourceJumpCloudGSuiteDirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}) tfp.Diagnostics {
+func dataSourceJumpCloudGSuiteDirectoryRead(_ context.Context, d *schema.ResourceData, meta interface{}), tfp.Diagnostics {
 	filterFunction := func(dir jcapiv2.Directory) bool {
 		return dir.Type_ == "g_suite" && dir.Name == d.Get("name")
 	}

@@ -5,7 +5,8 @@ import (
 	"strings"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	tfp "github.com/hashicorp/terraform-plugin-sdk"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceUserGroupMembership() *schema.Resource {

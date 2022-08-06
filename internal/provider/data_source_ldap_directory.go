@@ -4,7 +4,7 @@ import (
 	"context"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	tfp "github.com/hashicorp/terraform-plugin-sdk"
+	tfp "github.com/hashicorp/terraform-plugin-sdk/v2"
 )
 
 func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
@@ -30,7 +30,7 @@ func dataSourceJumpCloudLDAPDirectory() *schema.Resource {
 	}
 }
 
-func dataSourceJumpCloudLDAPDirectoryRead(_ context.Context, d *tfp.schema.Diagnostics, meta interface{}) tfp.Diagnostics {
+func dataSourceJumpCloudLDAPDirectoryRead(_ context.Context, d *schema.Diagnostics, meta interface{}) tfp.Diagnostics {
 	filterFunction := func(dir jcapiv2.Directory) bool {
 		return dir.Type_ == "ldap_server"
 	}

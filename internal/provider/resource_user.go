@@ -5,7 +5,8 @@ import (
 
 	jcapiv1 "github.com/TheJumpCloud/jcapi-go/v1"
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	tfp "github.com/hashicorp/terraform-plugin-sdk"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceUser() *schema.Resource {

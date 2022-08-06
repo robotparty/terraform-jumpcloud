@@ -4,8 +4,8 @@ import (
 	"context"
 
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	tfp "github.com/hashicorp/terraform-plugin-sdk"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	tfp "github.com/hashicorp/terraform-plugin-sdk/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceJumpCloudOffice365Directory() *schema.Resource {
