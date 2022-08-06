@@ -161,10 +161,14 @@ github.com/hashicorp/terraform-json v0.14.0 h1:sh9iZ1Y8IFJLx+xQiKHGud6/TSUCM0N8e
 github.com/hashicorp/terraform-json v0.14.0/go.mod h1:5A9HIWPkk4e5aeeXIBbkcOvaZbIYnAIkEyqP2pNSckM=
 github.com/hashicorp/terraform-plugin-docs v0.3.0 h1:q9qVsL8LYLVDRhS5nqxubCzWtRZ61Y6GLlphk9YIqR0=
 github.com/hashicorp/terraform-plugin-docs v0.3.0/go.mod h1:4jopztPjeyZAr51wPzX4b8Ld8bFQKQ9dbF40JbCQIts=
+github.com/hashicorp/terraform-plugin-docs v0.13.0 h1:6e+VIWsVGb6jYJewfzq2ok2smPzZrt1Wlm9koLeKazY=
+github.com/hashicorp/terraform-plugin-docs v0.13.0/go.mod h1:W0oCmHAjIlTHBbvtppWHe8fLfZ2BznQbuv8+UD8OucQ=
 github.com/hashicorp/terraform-plugin-go v0.12.0 h1:6wW9mT1dSs0Xq4LR6HXj1heQ5ovr5GxXNJwkErZzpJw=
 github.com/hashicorp/terraform-plugin-go v0.12.0/go.mod h1:kwhmaWHNDvT1B3QiSJdAtrB/D4RaKSY/v3r2BuoWK4M=
 github.com/hashicorp/terraform-plugin-log v0.7.0 h1:SDxJUyT8TwN4l5b5/VkiTIaQgY6R+Y2BQ0sRZftGKQs=
 github.com/hashicorp/terraform-plugin-log v0.7.0/go.mod h1:p4R1jWBXRTvL4odmEkFfDdhUjHf9zcs/BCoNHAc7IK4=
+github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1 h1:B9AocC+dxrCqcf4vVhztIkSkt3gpRjUkEka8AmZWGlQ=
+github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1/go.mod h1:FjM9DXWfP0w/AeOtJoSKHBZ01LqmaO6uP4bXhv3fekw=
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0 h1:+KxZULPsbjpAVoP0WNj/8aVW6EqpcX5JcUcQ5wl7Da4=
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0/go.mod h1:DwGJG3KNxIPluVk6hexvDfYR/MS/eKGpiztJoT3Bbbw=
 github.com/hashicorp/terraform-registry-address v0.0.0-20220623143253-7d51757b572c h1:D8aRO6+mTqHfLsK/BC3j5OAoogv1WLRWzY1AaTo3rBg=
