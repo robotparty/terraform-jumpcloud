@@ -3,9 +3,9 @@ package provider
 import (
 	"context"
 	"fmt"
+
 	jcapiv2 "github.com/TheJumpCloud/jcapi-go/v2"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	tfp "github.com/hashicorp/terraform-plugin-sdk"
 )
 
 func resourceUserGroupAssociation() *schema.Resource {

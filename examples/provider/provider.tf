@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     jumpcloud = {
-      source = "sagewave/jumpcloud"
+      source = "robotparty/jumpcloud"
     }
   }
 }
